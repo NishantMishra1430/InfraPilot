@@ -1,4 +1,4 @@
-# Phase: 1(PLAN)  
+# Phase: 1(PLAN)   
 
 # Command: python infrapilot.py <query>
 # Output: Recommendation: <AWS Resource>
