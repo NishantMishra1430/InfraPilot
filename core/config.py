@@ -9,7 +9,7 @@ class Credentials:
     # DataBase Credentials 
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "auth_db")
-    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "postgres")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "nishant")
     POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
     
     
@@ -20,7 +20,7 @@ class Credentials:
     
     # Default Boot User 
     DEFAULT_USERNAME: str = os.getenv("DEFAULT_USERNAME", "admin")
-    DEFAULT_PASSWORD: str = os.getenv("DEFAULT_PASSWORD", "Admin")
+    DEFAULT_PASSWORD: str = os.getenv("DEFAULT_PASSWORD", "admin")
 
     # DB URL 
     @property
