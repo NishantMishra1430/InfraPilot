@@ -13,9 +13,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True) # datatype, define_is_<id>_is_a_Unique_coloum_or_not, indexing
     username = Column(String(50), unique=True, index=True, nullable=False, )# unique defines a unique username, nullable: this field cannot be empty
     role = Column(String(15), nullable=False, default="Viewer")
-    password = Column(String(8), nullable=False,)
-    resources = Column(JSON, nullable=False, default=list)
-    joined_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    resources = Column(JSON, nullable=False, default=list) # default datatype is list mention list as this [] because if we mentioned as this [] than this list is assigned statically , if we mentioned list then its allocate dynamically  
+    joined_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)# Time 
     
     def __repr__(self):
         return f"<User(username: '{self.username}', role: '{self.role}', resources: {self.resources})>"

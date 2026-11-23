@@ -9,7 +9,7 @@ class Credentials:
     # DataBase Credentials 
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "auth_db")
-    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "postgres")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "nishant")
     POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
     
     
@@ -17,10 +17,12 @@ class Credentials:
     AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-1")
     LOCALSTACK_AUTH_TOKEN = os.getenv("LOCALSTACK_AUTH_TOKEN", "test")
     AWS_ENDPOINT_URL = os.getenv("AWS_ENDPOINT_URL", "http://157.173.121.36:4566")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "test")
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "test")
     
     # Default Boot User 
     DEFAULT_USERNAME: str = os.getenv("DEFAULT_USERNAME", "admin")
-    DEFAULT_PASSWORD: str = os.getenv("DEFAULT_PASSWORD", "Admin")
+    DEFAULT_PASSWORD: str = os.getenv("DEFAULT_PASSWORD", "admin")
 
     # DB URL 
     @property
