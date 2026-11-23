@@ -3,7 +3,7 @@ services:
     image: localstack/localstack:latest
     container_name: "localstack"
     ports:
-      - "4566:4566"
+      - "127.0.0.1:4566:4566"
     volumes:
       - localstack:/var/lib/localstack
     environment:
@@ -16,7 +16,7 @@ services:
     image: postgres:15-alpine
     container_name: "infrapilot_auth_database"
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - infrapilot_auth:/var/lib/auth
     environment:
