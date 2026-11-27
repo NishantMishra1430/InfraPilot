@@ -1,4 +1,4 @@
-services:
+services: 
   localstack:
     image: localstack/localstack:latest
     container_name: "localstack"
