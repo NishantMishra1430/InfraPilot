@@ -7,6 +7,7 @@ from sqlalchemy import Column, Integer, JSON, DateTime, String
 from sqlalchemy.sql import func
 from core.database import Base
 
+USER_POLICY = {}
 class User(Base):
     __tablename__ = "users"
     
