@@ -7,6 +7,7 @@ from core.database import get_db_session
 from core.exceptions import AuthenticationError, RBACDeniedError, InfraPilotError
 from core.logger import write_log
 from auth.models import User
+from auth.policies import get_roles_policies, ROLE_POLICY
 
 
 def hash_password(plain_password: str) -> str:
@@ -72,11 +73,13 @@ def verify_user(username: str, password: str) -> Dict[str, any]:
             raise AuthenticationError("Invalid username or password.")
 
         write_log("auth", user.username, user.role, "User authenticated", "SUCCESS")
+        policy = get_roles_policies(user.role)
         return {
             "id": user.id,
             "username": user.username,
             "role": user.role,
-            "resources": user.resources,
+            "resources": policy["resources"],
+            "actions": policy["actions"],
         }
 
 def create_user(
@@ -84,8 +87,7 @@ def create_user(
     actor_role: str,
     new_username: str,
     new_password: str,
-    new_role: str = "analyst",
-    resources: List[str] | None = None,
+    new_role: str = "analyst"
 ) -> Dict[str, Any]:
     """
     Creates a new user in PostgreSQL. Restricted to 'admin' role only.
@@ -102,12 +104,10 @@ def create_user(
 
     clean_username = new_username.strip().lower()
     clean_role = new_role.strip().lower()
-    if clean_role not in {"admin", "analyst", "dev"}:
-        raise InfraPilotError(f"Invalid role '{clean_role}'. Allowed: admin, analyst, dev.")
+    if clean_role not in ROLE_POLICY.keys():
+        raise InfraPilotError(f"Invalid role '{clean_role}' ONLY '{ROLE_POLICY.keys}'")
 
-    allowed_resources = resources if resources is not None else ["s3"]
-
-
+    policy = get_roles_policies(clean_role)
     for session in get_db_session():
         if session.query(User).filter(User.username == clean_username).first():
             raise InfraPilotError(f"User '{clean_username}' already exists.")
@@ -116,7 +116,8 @@ def create_user(
             username=clean_username,
             password_hash=hash_password(new_password),
             role=clean_role,
-            resources=allowed_resources,
+            resources=policy["resources"],
+            actions=policy["actions"]
         )
         session.add(new_user)
         session.commit()
@@ -132,4 +133,21 @@ def create_user(
             "username": new_user.username,
             "role": new_user.role,
             "resources": new_user.resources,
+            "actions": new_user.actions
         }
+        
+def authorize(role: str, resource: str, action: str) -> bool:
+    """Enforces Pure RBAC policy for a given role, resource, and action."""
+    info = get_roles_policies(role)
+    allowed_resources = info.get("resources", [])
+    allowed_actions = info.get("actions", [])
+
+    has_resource = "*" in allowed_resources or resource.lower() in allowed_resources
+    has_action = action.lower() in allowed_actions
+
+    if has_resource and has_action:
+        return True
+
+    raise RBACDeniedError(
+        f"RBAC Denied: Role '{role}' cannot perform '{action}' on '{resource}'."
+    )
